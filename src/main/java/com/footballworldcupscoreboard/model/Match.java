@@ -1,5 +1,6 @@
 package com.footballworldcupscoreboard.model;
 
+import java.time.Instant;
 import java.util.Objects;
 
 public class Match {
@@ -7,18 +8,17 @@ public class Match {
     private String awayTeam;
     private int homeTeamScore;
     private int awayTeamScore;
+    private Instant addedAt;
 
     public Match(String homeTeam, String awayTeam) {
-        this.homeTeam = homeTeam;
-        this.awayTeam = awayTeam;
-        this.homeTeamScore = 0;
-        this.awayTeamScore = 0;
+        this(homeTeam,awayTeam, 0,0);
     }
     public Match(String homeTeam, String awayTeam, int homeTeamScore, int awayTeamScore) {
         this.homeTeam = homeTeam;
         this.awayTeam = awayTeam;
         this.homeTeamScore = homeTeamScore;
         this.awayTeamScore = awayTeamScore;
+        this.addedAt = Instant.now();
     }
 
     public String getHomeTeam() {
@@ -52,6 +52,19 @@ public class Match {
     public void setAwayTeamScore(int awayTeamScore) {
        this.awayTeamScore = awayTeamScore;
     }
+
+    public Instant getAddedAt() {
+        return addedAt;
+    }
+
+    public void setAddedAt(Instant addedAt) {
+        this.addedAt = addedAt;
+    }
+    @Override
+    public String toString() {
+        return homeTeam + " " + homeTeamScore + " - " + awayTeamScore + " " + awayTeam;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -64,5 +77,7 @@ public class Match {
     public int hashCode() {
         return Objects.hash(homeTeam, awayTeam);
     }
-
+    public int getTotalScore(){
+        return homeTeamScore + awayTeamScore;
+    }
 }

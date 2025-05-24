@@ -29,7 +29,20 @@ class ScoreBoardTest {
             scoreBoard.startGame(match);
         }
     }
+    @Test
+    public void should_check_duplicates_before_start_game(){
 
+        //given
+        Match matchDuplicate = new Match("Mexico", "Canada");
+
+        //when
+
+        //then
+        assertThatThrownBy(()->scoreBoard.startGame(matchDuplicate))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("The match already exist");
+
+    }
     @Test
     public void should_start_game_with_initial_Score_Zero_Zero() {
 
@@ -40,7 +53,7 @@ class ScoreBoardTest {
 
         //Then
         Match firstMatch = matches.get(0);
-        assertThat(matchList).hasSize(5);
+        assertThat(matches).hasSize(5);
         assertThat(firstMatch.getHomeTeam()).isEqualTo("Mexico");
         assertThat(firstMatch.getAwayTeam()).isEqualTo("Canada");
         assertThat(firstMatch.getHomeTeamScore()).isEqualTo(0);
@@ -50,7 +63,7 @@ class ScoreBoardTest {
     public void should_check_if_game_exist_before_updating(){
 
         //given
-        Match getNonExistingMatch = new Match("Croatia", "Urugway");
+        Match getNonExistingMatch = new Match("Croatia", "Uruguay");
 
         //when
         boolean updateResult = scoreBoard.updateGame(getNonExistingMatch,2,1);
@@ -62,8 +75,8 @@ class ScoreBoardTest {
     public void should_check_before_updating_if_the_match_is_correct(){
 
         //given
-        Match match1 = new Match("Costarica", "Belgia");
-        Match match2 = new Match("Costarica", "Belgia");
+        Match match1 = new Match("Costa Rica", "Belgium");
+        Match match2 = new Match("Costa Rica", "Belgium");
 
         //then
         assertThat(match1).isEqualTo(match2);
@@ -73,8 +86,8 @@ class ScoreBoardTest {
     public void should_return_false_if_the_match_is_incorrect(){
 
         //given
-        Match match1 = new Match("Costarica", "Belgia");
-        Match match2 = new Match("Costarica", "Croatia");
+        Match match1 = new Match("Costa Rica", "Belgia");
+        Match match2 = new Match("Costa Rica", "Croatia");
 
         //then
         assertThat(match1).isNotEqualTo(match2);
@@ -110,4 +123,57 @@ class ScoreBoardTest {
         assertThat(updatedMatchSpainBrazil.getHomeTeamScore()).isEqualTo(1);
         assertThat(updatedMatchSpainBrazil.getAwayTeamScore()).isEqualTo(0);
 }
+
+@Test
+    public void should_delete_Game_From_Live_Scoreboard_AfterGameEnding(){
+        //given
+        Match matchToRemove = new Match("Mexico", "Canada");
+
+        //when
+        boolean removed = scoreBoard.deleteGameAfterGameEnding(matchToRemove);
+
+        //then
+        assertThat(removed).isTrue();
+        assertThat(scoreBoard.getAllMatches()).hasSize(4);
+}
+    @Test
+    public void should_return_total_score_as_sum_of_both_teams_scores() {
+        // given
+        Match match = new Match("Argentina", "Brazil", 2, 3);
+
+        // when
+        int totalScore = match.getTotalScore();
+
+        // then
+        assertThat(totalScore).isEqualTo(5);
+    }
+    @Test
+    public void should_return_matches_sorted_by_total_score_and_recently_added() throws InterruptedException {
+        // given
+        Match match1 = new Match("Team A", "Team B", 1, 0); // 1
+        Thread.sleep(10); // ensure different timestamps
+        Match match2 = new Match("Team C", "Team D", 2, 2); // 4
+        Thread.sleep(10);
+        Match match3 = new Match("Team E", "Team F", 2, 2); // 4 (same score, later added)
+        Thread.sleep(10);
+        Match match4 = new Match("Team G", "Team H", 3, 1); // 4 (latest added)
+
+        scoreBoard = new ScoreBoard(); // fresh scoreboard
+        scoreBoard.startGame(match1);
+        scoreBoard.startGame(match2);
+        scoreBoard.startGame(match3);
+        scoreBoard.startGame(match4);
+
+        // when
+        List<Match> summary = scoreBoard.getSummary();
+
+        // then
+        assertThat(summary).hasSize(4);
+        assertThat(summary.get(0)).extracting(Match::getHomeTeam).isEqualTo("Team G"); // highest score & most recent
+        assertThat(summary.get(1)).extracting(Match::getHomeTeam).isEqualTo("Team E"); // same score, later added
+        assertThat(summary.get(2)).extracting(Match::getHomeTeam).isEqualTo("Team C");
+        assertThat(summary.get(3)).extracting(Match::getHomeTeam).isEqualTo("Team A"); // lowest score
+
+    }
+
 }
