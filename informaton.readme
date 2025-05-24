@@ -1,0 +1,37 @@
+# Football World Cup Score Board
+
+Ta aplikacja umożliwia zarządzanie na żywo wynikami meczów piłki nożnej podczas Mistrzostw Świata:
+
+- Rozpoczynanie nowego meczu (start z wynikiem 0-0)
+- Kończenie meczu (usuwanie meczu z tablicy wyników)
+- Aktualizacja wyniku meczu
+- Pobieranie podsumowania meczów posortowanych według sumy punktów oraz daty dodania (najnowsze na początku)
+
+---
+
+## Architektura i technologie
+
+- Implementacja w języku Java
+- Dane przechowywane w pamięci w strukturze `List<Match>`
+- Testy jednostkowe oparte na JUnit 5 oraz AssertJ
+- Zastosowanie zasad SOLID oraz dobrych praktyk obiektowych
+
+---
+
+## Uruchomienie i testowanie
+
+1. Skopiuj repozytorium na lokalną maszynę
+2. Uruchom testy jednostkowe (np. `mvn test` lub `./gradlew test`)
+3. Możesz użyć klasy `ScoreBoard` do zarządzania meczami w swoim kodzie
+
+---
+
+## Założenia i uwagi
+
+- Zakładamy, że mecz jest jednoznacznie identyfikowany przez parę drużyn (`homeTeam`, `awayTeam`)
+- Nie ma obsługi wielokrotnego rozpoczęcia tego samego meczu (drużyny + czas)
+- Aktualizacja wyniku nie pozwala na ujemne wartości
+- Podsumowanie zwraca mecze posortowane malejąco według sumy punktów i kolejności dodania (najnowsze na początku)
+- Dane są przechowywane w pamięci — brak trwałej bazy danych
+
+---
