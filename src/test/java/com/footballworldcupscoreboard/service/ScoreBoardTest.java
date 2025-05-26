@@ -160,9 +160,9 @@ class ScoreBoardTest {
         //given & when
         Clock baseClock = Clock.fixed(Instant.parse("2024-01-01T10:00:00Z"), ZoneOffset.UTC);
 
-        Match match1 = new Match(new HomeTeam("Team A"), new AwayTeam("Team B"), 1, 0, baseClock); // 1
-        Match match2 = new Match(new HomeTeam("Team C"), new AwayTeam("Team D"), 2, 2, Clock.offset(baseClock, Duration.ofSeconds(10))); // 4
-        Match match3 = new Match(new HomeTeam("Team E"), new AwayTeam("Team F"), 2, 2, Clock.offset(baseClock, Duration.ofSeconds(20))); // 4 (same score, later added)
+        Match match1 = new Match(new HomeTeam("Team A"), new AwayTeam("Team B"), 1, 0, baseClock);
+        Match match2 = new Match(new HomeTeam("Team C"), new AwayTeam("Team D"), 2, 2, Clock.offset(baseClock, Duration.ofSeconds(10)));
+        Match match3 = new Match(new HomeTeam("Team E"), new AwayTeam("Team F"), 2, 2, Clock.offset(baseClock, Duration.ofSeconds(20)));
         Match match4 = new Match(new HomeTeam("Team G"), new AwayTeam("Team H"), 3, 1, Clock.offset(baseClock, Duration.ofSeconds(30)));
 
         scoreBoard = new ScoreBoard(); // fresh scoreboard
@@ -204,7 +204,7 @@ class ScoreBoardTest {
         List<Match> summaryOfFinishedMatches = scoreBoard.getSummaryOfFinishedMatches();
 
         // then
-        assertAll("",
+        assertAll("Sorted matches by total score and addedAt",
                 () -> assertThat(summaryOfFinishedMatches).hasSize(4),
                 () -> AssertionsForClassTypes.assertThat(summaryOfFinishedMatches.get(0)).extracting(m -> m.homeTeam().homeTeam()).isEqualTo("Team G"), // highest score & most recent
                 () -> AssertionsForClassTypes.assertThat(summaryOfFinishedMatches.get(1)).extracting(m -> m.homeTeam().homeTeam()).isEqualTo("Team E"), // same score, later added
