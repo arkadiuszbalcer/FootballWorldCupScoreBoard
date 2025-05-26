@@ -21,7 +21,7 @@ Ta aplikacja umożliwia zarządzanie na żywo wynikami meczów piłki nożnej po
 ## Uruchomienie i testowanie
 
 1. Skopiuj repozytorium na lokalną maszynę
-2. Uruchom testy jednostkowe (np. `mvn test` lub `./gradlew test`)
+2. Uruchom testy jednostkowe
 3. Możesz użyć klasy `ScoreBoard` do zarządzania meczami w swoim kodzie
 
 ---
